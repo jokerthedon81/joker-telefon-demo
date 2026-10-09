@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Panel JOKERAl — rozmowy, wizyty, ustawienia (demo)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050507;--card:#0c0b11;--line:#24212f;--silver:#d9dce3;--muted:#9a9cab;--purple:#8b5cf6;--purple2:#c084fc;--green:#34d399;--red:#ef4444;--amber:#fbbf24}
+*{box-sizing:border-box;margin:0;padding:0}
+html{overflow-x:hidden}
+body{background:var(--bg);color:var(--silver);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;width:700px;height:600px;left:50%;top:-300px;transform:translateX(-50%);background:radial-gradient(circle,rgba(139,92,246,.18),transparent 65%);z-index:-1;pointer-events:none}
+.demo-banner{position:sticky;top:0;z-index:40;text-align:center;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:7px 12px;background:rgba(139,92,246,.16);border-bottom:1px solid rgba(139,92,246,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#e9e3ff}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0;gap:12px}
+.logo{font-weight:800;letter-spacing:.04em;font-size:19px;display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none}
+.logo .mask{width:28px;height:28px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#b9bcc6 45%,#5b5e6b 100%);box-shadow:0 0 0 3px #2a1a4a,0 0 18px rgba(192,132,252,.6)}
+.l{text-transform:none;font-family:Georgia,"Times New Roman",serif;font-style:italic;font-weight:600;color:var(--purple2);padding-left:.04em}
+.navlinks{display:flex;gap:8px}
+.navlinks a{color:var(--muted);text-decoration:none;font-size:14px;border:1px solid var(--line);padding:7px 13px;border-radius:999px}
+.navlinks a.on{color:#fff;border-color:var(--purple)}
+h1{font-size:clamp(26px,4vw,38px);letter-spacing:-.02em;color:#fff;font-weight:800}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin:8px 0 18px}
+.top p{color:var(--muted);font-size:14px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:18px;scrollbar-width:none}
+.tab{flex:none;font:600 14px Inter,sans-serif;color:var(--muted);background:#100f16;border:1px solid var(--line);padding:9px 15px;border-radius:12px;cursor:pointer}
+.tab.on{color:#fff;background:rgba(139,92,246,.25);border-color:var(--purple)}
+.tab .cnt{display:inline-block;min-width:20px;font-size:11px;background:var(--purple);color:#fff;border-radius:999px;padding:1px 6px;margin-left:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 20px;margin-bottom:14px}
+.card h3{color:#fff;font-size:16px;margin-bottom:10px}
+.muted{color:var(--muted);font-size:13.5px}
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty a{color:var(--purple2)}
+.btn{cursor:pointer;font:600 14px Inter,sans-serif;padding:9px 15px;border-radius:11px;border:1px solid var(--line);background:#1a1823;color:#fff;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.btn.primary{background:linear-gradient(135deg,var(--purple),#6d28d9);border-color:transparent}
+.btn.danger{color:#fca5a5;border-color:#5b1f24;background:#1b0f12}
+.btn.sm{padding:5px 10px;font-size:12.5px;border-radius:9px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+input,select,textarea{background:#13121a;border:1px solid var(--line);color:#fff;border-radius:10px;padding:8px 10px;font:14px Inter,sans-serif;max-width:100%}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--purple)}
+input[type=checkbox],input[type=range]{accent-color:var(--purple)}
+textarea{width:100%;min-height:90px;resize:vertical}
+label.f{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.full{width:100%}
+/* rozmowy */
+.conv{border:1px solid var(--line);border-radius:14px;margin-bottom:10px;background:#0a090e;overflow:hidden}
+.conv summary{list-style:none;cursor:pointer;padding:13px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.conv summary::-webkit-details-marker{display:none}
+.conv .when{color:#fff;font-weight:600;font-size:14px}
+.conv .first{color:var(--muted);font-size:13.5px;flex:1;min-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px;border:1px solid}
+.b-wizyta,.b-potwierdzone{color:var(--green);border-color:rgba(52,211,153,.4);background:rgba(52,211,153,.08)}
+.b-oddzwonienie,.b-nowe{color:var(--amber);border-color:rgba(251,191,36,.4);background:rgba(251,191,36,.08)}
+.b-odwołanie,.b-odwołane{color:#fca5a5;border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.08)}
+.b-informacja,.b-zrobione,.b-zmiana{color:var(--purple2);border-color:rgba(192,132,252,.4);background:rgba(192,132,252,.08)}
+.tr{padding:4px 16px 14px;border-top:1px solid var(--line)}
+.line{display:flex;gap:10px;padding:5px 0;font-size:14px}
+.line b{flex:none;width:62px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding-top:2px}
+.line.agent b{color:var(--purple2)}
+.line.klient b{color:var(--green)}
+/* tabela */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:760px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:#0e0d14;font-weight:600}
+tr:last-child td{border-bottom:0}
+td select{padding:5px 8px;font-size:13px}
+/* ustawienia */
+.hours .hr{display:grid;grid-template-columns:120px 110px 1fr 1fr;gap:8px;align-items:center;padding:5px 0;font-size:14px}
+.hours input[type=time]{width:100%}
+.svc{display:grid;grid-template-columns:2fr 90px 90px 1.6fr auto auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px dashed #1e1c27}
+.svc .tag{font-size:10.5px;color:var(--amber);border:1px solid rgba(251,191,36,.4);border-radius:6px;padding:1px 5px;margin-left:4px;white-space:nowrap}
+.svch{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--line)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120px);background:#18151f;border:1px solid var(--purple);color:#fff;padding:11px 18px;border-radius:12px;font-size:14px;transition:transform .3s;z-index:60}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.switch{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}
+.switch:last-child{border-bottom:0}
+.switch input{margin-top:4px;width:18px;height:18px;flex:none}
+.switch b{color:#fff;display:block;font-size:15px}
+/* gate */
+#gate{max-width:380px;margin:40px auto 60px;text-align:center}
+#gate input{font-size:22px;letter-spacing:.4em;text-align:center;width:100%;padding:12px;margin:6px 0}
+#gate .err{color:#fca5a5;min-height:22px;font-size:14px}
+.hidden{display:none!important}
+.note{font-size:12.5px;color:var(--muted);margin-top:10px}
+footer{padding:34px 16px 50px;text-align:center;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:30px}
+footer .sig{font-size:15px;color:var(--silver);margin-bottom:6px}
+footer .sig b{color:var(--purple2)}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}
+ .hours .hr{grid-template-columns:1fr 1fr;row-gap:4px}.hours .hr span{grid-column:1/3;font-weight:600;color:#fff}
+ .svc{grid-template-columns:1fr 1fr;gap:6px}.svc .nm{grid-column:1/3}.svc .kw{grid-column:1/3}
+ .svch{display:none}.wrap{padding:0 12px}.navlinks a{padding:6px 10px;font-size:13px}.logo span.t{display:none}.card{padding:16px}}
+</style>
+</head>
+<body>
+<div class="demo-banner">Wersja demonstracyjna · dane tylko w tej przeglądarce</div>
+<div class="wrap">
+<nav>
+ <a class="logo" href="./"><span class="mask"></span><span>JOKERA<span class="l">l</span></span><span class="t" style="font-weight:300;color:var(--muted)">Panel</span></a>
+ <div class="navlinks"><a href="./">Start</a><a href="rozmowa.html">Rozmowa</a><a class="on" href="panel.html">Panel</a></div>
+</nav>
+
+<div id="gate" class="card">
+ <h1 style="font-size:26px;margin-bottom:6px" id="gateTitle">Panel</h1>
+ <p class="muted" id="gateText"></p>
+ <form id="gateForm" autocomplete="off">
+  <input id="pin1" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" placeholder="••••" aria-label="PIN">
+  <input id="pin2" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" placeholder="powtórz" class="hidden" aria-label="Powtórz PIN">
+  <div class="err" id="gateErr"></div>
+  <button class="btn primary full" style="justify-content:center;padding:12px">Wejdź</button>
+ </form>
+ <p class="note">PIN chroni panel tylko na tym urządzeniu. Jest zapisany lokalnie jako skrót (hash), to nie jest prawdziwe zabezpieczenie.</p>
+ <p class="note"><a href="#" id="forgot" style="color:var(--muted)">Nie pamiętam PIN-u (wyczyść dane panelu)</a></p>
+</div>
+
+<main id="app" class="hidden">
+ <div class="top">
+  <div><h1 id="bizTitle">Panel</h1><p>Wszystko, co agent JOKERA<span class="l">l</span> załatwił przez telefon.</p></div>
+  <div class="btns"><a class="btn primary" href="rozmowa.html">🎙️ Testuj rozmowę</a><button class="btn" id="lock">🔒 Zablokuj</button></div>
+ </div>
+ <div class="tabs" role="tablist">
+  <button class="tab on" data-t="rozmowy">Rozmowy <span class="cnt" id="cConv">0</span></button>
+  <button class="tab" data-t="zgloszenia">Zgłoszenia i wizyty <span class="cnt" id="cRec">0</span></button>
+  <button class="tab" data-t="ustawienia">Ustawienia firmy</button>
+  <button class="tab" data-t="auto">Automatyzacja</button>
+ </div>
+
+ <section id="t-rozmowy"></section>
+
+ <section id="t-zgloszenia" class="hidden">
+  <div class="btns" style="margin-bottom:12px">
+   <select id="fType"><option value="">Wszystkie</option><option value="wizyta">Wizyty</option><option value="oddzwonienie">Do oddzwonienia</option></select>
+   <select id="fStatus"><option value="">Każdy status</option><option>nowe</option><option>potwierdzone</option><option>zrobione</option><option>odwołane</option></select>
+  </div>
+  <div id="recList"></div>
+ </section>
+
+ <section id="t-ustawienia" class="hidden">
+  <div class="card">
+   <h3>Firma</h3>
+   <div class="grid2">
+    <div><label class="f">Nazwa firmy</label><input id="sName" class="full"></div>
+    <div><label class="f">Branża (preset)</label><div class="btns"><select id="sPreset"></select><button class="btn" id="loadPreset">Wczytaj preset</button></div></div>
+    <div><label class="f">Adres</label><input id="sAddr" class="full"></div>
+    <div><label class="f">Jak dojechać</label><input id="sDir" class="full"></div>
+   </div>
+   <label class="f">Powitanie ({firma} zamienia się na nazwę)</label><input id="sGreet" class="full">
+   <div class="grid2">
+    <div><label class="f">Tempo głosu: <b id="rateV"></b></label><input type="range" id="sRate" min="0.7" max="1.3" step="0.05" class="full"></div>
+    <div><label class="f">Ile wizyt naraz (stanowiska, stoliki)</label><input type="number" id="sCap" min="1" max="50"></div>
+   </div>
+  </div>
+  <div class="card hours">
+   <h3>Godziny otwarcia</h3>
+   <div id="hoursRows"></div>
+  </div>
+  <div class="card">
+   <h3>Usługi i ceny</h3>
+   <p class="muted" style="margin-bottom:8px">Słowa kluczowe pomagają agentowi rozpoznać usługę (np. „opon, koła”). Pozycje z etykietą <span style="color:var(--amber)">przykład</span> to dane demonstracyjne. Zmień je na swoje.</p>
+   <div class="svc svch"><span>Nazwa</span><span>Cena zł</span><span>Minuty</span><span>Słowa kluczowe</span><span>Rezerw.</span><span></span></div>
+   <div id="svcRows"></div>
+   <button class="btn" id="addSvc" style="margin-top:10px">+ Dodaj usługę</button>
+  </div>
+  <div class="btns"><button class="btn primary" id="saveSet">💾 Zapisz ustawienia</button><span class="muted" style="align-self:center">Agent używa ich od następnej rozmowy.</span></div>
+ </section>
+
+ <section id="t-auto" class="hidden">
+  <div class="card">
+   <h3>Reguły</h3>
+   <label class="switch"><input type="checkbox" id="aConfirm"><span><b>Automatycznie potwierdzaj wizytę, jeśli termin jest wolny</b><span class="muted">Agent od razu potwierdza i wysyła SMS (w demo: symulacja). Wyłączone: wizyta trafia jako „nowe” do ręcznego potwierdzenia.</span></span></label>
+   <label class="switch"><input type="checkbox" id="aCallback"><span><b>Gdy agent nie rozumie, zbierz kontakt do oddzwonienia</b><span class="muted">Po dwóch niezrozumianych pytaniach agent prosi o imię i numer i dodaje je do listy „Do oddzwonienia”.</span></span></label>
+  </div>
+  <div class="card">
+   <h3>Podsumowanie dnia</h3>
+   <div class="btns" style="margin-bottom:10px"><input type="date" id="sumDate"><button class="btn" id="genSum">Generuj</button><button class="btn primary" id="copySum">📋 Kopiuj</button></div>
+   <textarea id="sumText" rows="9" readonly></textarea>
+   <p class="note">Wklej to do SMS-a, WhatsAppa albo maila do szefa.</p>
+  </div>
+  <div class="card">
+   <h3>Eksport i import</h3>
+   <div class="btns">
+    <button class="btn" id="expCsv">⬇️ Wizyty i zgłoszenia (CSV)</button>
+    <button class="btn" id="expJson">⬇️ Ustawienia (JSON)</button>
+    <label class="btn" for="impJson">⬆️ Wczytaj ustawienia (JSON)</label><input type="file" id="impJson" accept=".json,application/json" class="hidden">
+   </div>
+   <p class="note">CSV otworzysz w Excelu albo Arkuszach Google.</p>
+  </div>
+  <div class="card">
+   <h3>Dane demo</h3>
+   <div class="btns"><button class="btn danger" id="wipe">🗑️ Wyczyść rozmowy i zgłoszenia</button><button class="btn danger" id="wipeAll">Wyczyść wszystko (z PIN-em)</button></div>
+  </div>
+ </section>
+ <p class="note">🔒 Wszystkie dane (rozmowy, wizyty, ustawienia, PIN) są zapisane tylko w tej przeglądarce (localStorage). Nic nie trafia na serwer. Wyczyszczenie danych przeglądarki je usuwa.</p>
+</main>
+</div>
+<div class="toast" id="toast"></div>
+<footer>
+ <div class="sig">Follow the Rabbit, by <b>JOKERGODA<span class="l">l</span></b></div>
+ <div>Wersja demonstracyjna.</div>
+</footer>
+
+<script src="engine.js"></script>
+<script>
+(() => {
+const E = window.JokerEngine, K = E.KEYS;
+const $ = id => document.getElementById(id);
+const store = E.browserStore();
+let S = E.loadSettings();
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const toast = t => { const el = $('toast'); el.textContent = t; el.classList.add('show'); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('show'), 2200); };
+const DAYS = ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'];
+const fmtDT = s => { const d = new Date(s); return d.toLocaleDateString('pl-PL', { day: 'numeric', month: 'short' }) + ', ' + d.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }); };
+const fmtDay = iso => { const d = E.fromIso(iso); return DAYS[d.getDay()].slice(0, 3) + ' ' + d.toLocaleDateString('pl-PL', { day: 'numeric', month: 'numeric' }); };
+const ph = p => String(p || '').replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
+
+/* ---------- PIN ---------- */
+async function hash(pin) {
+  const msg = 'jokeral-panel:' + pin;
+  if (window.crypto && crypto.subtle) {
+    const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+    return 'sha256:' + [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+  }
+  let h = 2166136261; for (const c of msg) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; } return 'fnv:' + h.toString(16);
+}
+const hasPin = () => !!localStorage.getItem(K.pin);
+function gateUI() {
+  const first = !hasPin();
+  $('gateTitle').textContent = first ? 'Ustaw PIN do panelu' : 'Podaj PIN';
+  $('gateText').textContent = first ? 'Pierwsze wejście. Wymyśl PIN (4–8 cyfr), będzie potrzebny przy następnym otwarciu panelu na tym urządzeniu.' : 'Panel jest zablokowany.';
+  $('pin2').classList.toggle('hidden', !first);
+  $('pin1').value = ''; $('pin2').value = ''; $('gateErr').textContent = '';
+}
+$('gateForm').onsubmit = async e => {
+  e.preventDefault();
+  const p = $('pin1').value.trim();
+  if (!/^\d{4,8}$/.test(p)) { $('gateErr').textContent = 'PIN to 4–8 cyfr.'; return; }
+  if (!hasPin()) {
+    if (p !== $('pin2').value.trim()) { $('gateErr').textContent = 'PIN-y się różnią.'; return; }
+    localStorage.setItem(K.pin, await hash(p));
+  } else if (await hash(p) !== localStorage.getItem(K.pin)) { $('gateErr').textContent = 'Zły PIN.'; return; }
+  sessionStorage.setItem('jokeral.unlocked', '1'); open_();
+};
+$('forgot').onclick = e => { e.preventDefault(); if (confirm('Usunąć PIN oraz wszystkie rozmowy, zgłoszenia i ustawienia z tej przeglądarki?')) { Object.values(K).forEach(k => localStorage.removeItem(k)); sessionStorage.clear(); location.reload(); } };
+$('lock').onclick = () => { sessionStorage.removeItem('jokeral.unlocked'); $('app').classList.add('hidden'); $('gate').classList.remove('hidden'); gateUI(); };
+function open_() { $('gate').classList.add('hidden'); $('app').classList.remove('hidden'); renderAll(); }
+
+/* ---------- zakładki ---------- */
+document.querySelectorAll('.tab').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x === b));
+  ['rozmowy', 'zgloszenia', 'ustawienia', 'auto'].forEach(t => $('t-' + t).classList.toggle('hidden', t !== b.dataset.t));
+  history.replaceState(null, '', '#' + b.dataset.t);
+});
+
+/* ---------- rozmowy ---------- */
+function renderConvos() {
+  const cs = store.convos(); $('cConv').textContent = cs.length;
+  const el = $('t-rozmowy');
+  if (!cs.length) { el.innerHTML = '<div class="card empty">Brak rozmów.<br><a href="rozmowa.html">Zadzwoń do agenta</a> i wróć tutaj, rozmowa pojawi się na liście.</div>'; return; }
+  el.innerHTML = cs.map(c => {
+    const first = (c.transcript.find(x => x.who === 'klient') || {}).text || '(bez wypowiedzi klienta)';
+    const dur = c.seconds != null ? `${Math.floor(c.seconds / 60)}:${String(c.seconds % 60).padStart(2, '0')}` : '';
+    const oc = (c.outcome || 'informacja');
+    return `<details class="conv"><summary><span class="when">${esc(fmtDT(c.start))}</span><span class="badge b-${esc(oc.split(' ')[0])}">${esc(oc)}</span><span class="muted">${esc(dur)}</span><span class="first">„${esc(first)}”</span></summary>
+      <div class="tr">${c.transcript.map(x => `<div class="line ${x.who}"><b>${x.who === 'agent' ? 'Agent' : 'Klient'}</b><span>${esc(x.text).replace(/JOKER(GOD)?Al/g, (m, g) => 'JOKER' + (g || '') + 'A<span class="l">l</span>')}</span></div>`).join('')}
+      <div class="btns" style="margin-top:10px"><button class="btn sm danger" data-delc="${esc(c.id)}">Usuń rozmowę</button></div></div></details>`;
+  }).join('');
+  el.querySelectorAll('[data-delc]').forEach(b => b.onclick = () => { store.removeConvo(b.dataset.delc); renderConvos(); toast('Rozmowa usunięta'); });
+}
+
+/* ---------- zgłoszenia ---------- */
+function renderRecords() {
+  const all = store.list(); $('cRec').textContent = all.filter(r => r.status === 'nowe').length;
+  const ft = $('fType').value, fs = $('fStatus').value;
+  const rs = all.filter(r => (!ft || r.type === ft) && (!fs || r.status === fs)).sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+  const el = $('recList');
+  if (!rs.length) { el.innerHTML = '<div class="card empty">Brak zgłoszeń' + (ft || fs ? ' dla tego filtra' : '') + '.<br><a href="rozmowa.html">Umów wizytę przez rozmowę z agentem</a>.</div>'; return; }
+  el.innerHTML = `<div class="tbl"><table><thead><tr><th>Typ</th><th>Termin</th><th>Usługa / sprawa</th><th>Imię</th><th>Telefon</th><th>Status</th><th></th></tr></thead><tbody>${rs.map(r => `
+   <tr><td>${r.type === 'wizyta' ? '📅 Wizyta' : '📞 Oddzwonić'}</td>
+   <td>${r.type === 'wizyta' ? esc(fmtDay(r.date) + ', ' + r.time) : '<span class="muted">zgłosz. ' + esc(fmtDay(r.date) + ' ' + r.time) + '</span>'}</td>
+   <td>${esc(r.service || r.note || '')}${r.type === 'wizyta' && r.note ? ' <span class="muted">(' + esc(r.note) + ')</span>' : ''}</td>
+   <td>${esc(r.name)}</td><td><a href="tel:${esc(r.phone)}" style="color:var(--silver)">${esc(ph(r.phone))}</a></td>
+   <td><select data-st="${esc(r.id)}" class="b-${esc(r.status)}">${['nowe', 'potwierdzone', 'zrobione', 'odwołane'].map(s => `<option${s === r.status ? ' selected' : ''}>${s}</option>`).join('')}</select></td>
+   <td><button class="btn sm danger" data-del="${esc(r.id)}" aria-label="Usuń">✕</button></td></tr>`).join('')}</tbody></table></div>`;
+  el.querySelectorAll('[data-st]').forEach(s => s.onchange = () => { store.update(s.dataset.st, { status: s.value }); renderRecords(); toast('Status: ' + s.value); });
+  el.querySelectorAll('[data-del]').forEach(b => b.onclick = () => { if (confirm('Usunąć to zgłoszenie?')) { store.remove(b.dataset.del); renderRecords(); } });
+}
+$('fType').onchange = $('fStatus').onchange = renderRecords;
+
+/* ---------- ustawienia ---------- */
+Object.entries(E.PRESETS).forEach(([k, p]) => { const o = document.createElement('option'); o.value = k; o.textContent = p.label; $('sPreset').appendChild(o); });
+function renderSettings() {
+  $('bizTitle').textContent = 'Panel · ' + S.name;
+  $('sName').value = S.name; $('sPreset').value = S.preset || 'gabinet'; $('sAddr').value = S.address || ''; $('sDir').value = S.directions || '';
+  $('sGreet').value = S.greeting || ''; $('sRate').value = S.voiceRate || 1; $('rateV').textContent = (+$('sRate').value).toFixed(2) + '×'; $('sCap').value = S.capacity || 1;
+  $('hoursRows').innerHTML = [1, 2, 3, 4, 5, 6, 0].map(i => { const h = S.hours[i]; return `<div class="hr" data-d="${i}"><span>${DAYS[i]}</span>
+    <label class="muted"><input type="checkbox" class="hc"${h.closed ? '' : ' checked'}> otwarte</label>
+    <input type="time" class="ho" value="${esc(h.open)}"${h.closed ? ' disabled' : ''} aria-label="Od"><input type="time" class="hz" value="${esc(h.close)}"${h.closed ? ' disabled' : ''} aria-label="Do"></div>`; }).join('');
+  $('hoursRows').querySelectorAll('.hc').forEach(c => c.onchange = () => { const r = c.closest('.hr'); r.querySelector('.ho').disabled = r.querySelector('.hz').disabled = !c.checked; });
+  renderSvc();
+  $('aConfirm').checked = !!(S.automation || {}).autoConfirm; $('aCallback').checked = !!(S.automation || {}).fallbackToCallback;
+}
+function renderSvc() {
+  $('svcRows').innerHTML = S.services.map((s, i) => `<div class="svc" data-i="${i}">
+    <span class="nm" style="display:flex;align-items:center"><input class="sn full" value="${esc(s.name)}" aria-label="Nazwa">${s.example ? '<span class="tag">przykład</span>' : ''}</span>
+    <input class="sp" type="number" min="0" value="${s.price == null ? '' : esc(s.price)}" placeholder="—" aria-label="Cena">
+    <input class="sd" type="number" min="0" step="5" value="${esc(s.duration)}" aria-label="Minuty">
+    <input class="sk kw" value="${esc(s.keywords || '')}" placeholder="słowa kluczowe" aria-label="Słowa kluczowe">
+    <label class="muted"><input type="checkbox" class="sb"${s.bookable ? ' checked' : ''}> rez.</label>
+    <button class="btn sm danger sx" aria-label="Usuń">✕</button></div>`).join('');
+  $('svcRows').querySelectorAll('.svc').forEach(row => {
+    const i = +row.dataset.i;
+    row.querySelectorAll('input').forEach(inp => inp.addEventListener('input', () => { S.services[i].example = false; const t = row.querySelector('.tag'); if (t) t.remove(); }));
+    row.querySelector('.sx').onclick = () => { readSvc(); S.services.splice(i, 1); renderSvc(); };
+  });
+}
+function readSvc() {
+  $('svcRows').querySelectorAll('.svc').forEach(row => {
+    const s = S.services[+row.dataset.i]; if (!s) return;
+    s.name = row.querySelector('.sn').value.trim() || 'Usługa';
+    const p = row.querySelector('.sp').value; s.price = p === '' ? null : Math.max(0, +p);
+    s.duration = Math.max(0, +row.querySelector('.sd').value || 0);
+    s.keywords = row.querySelector('.sk').value; s.bookable = row.querySelector('.sb').checked;
+    if (s.bookable && !s.duration) s.duration = 30;
+  });
+}
+function readSettings() {
+  S.name = $('sName').value.trim() || 'Moja firma'; S.address = $('sAddr').value.trim(); S.directions = $('sDir').value.trim();
+  S.greeting = $('sGreet').value.trim(); S.voiceRate = +$('sRate').value; S.capacity = Math.max(1, +$('sCap').value || 1); S.preset = $('sPreset').value;
+  $('hoursRows').querySelectorAll('.hr').forEach(r => { const d = +r.dataset.d; S.hours[d] = { closed: !r.querySelector('.hc').checked, open: r.querySelector('.ho').value || '09:00', close: r.querySelector('.hz').value || '17:00' }; });
+  readSvc();
+}
+$('sRate').oninput = () => $('rateV').textContent = (+$('sRate').value).toFixed(2) + '×';
+$('addSvc').onclick = () => { readSvc(); S.services.push({ name: '', price: null, duration: 30, bookable: true, example: false, keywords: '' }); renderSvc(); $('svcRows').lastElementChild.querySelector('.sn').focus(); };
+$('saveSet').onclick = () => { readSettings(); E.saveSettings(S); renderSettings(); toast('Zapisano. Agent używa nowych ustawień.'); };
+$('loadPreset').onclick = () => {
+  const p = $('sPreset').value;
+  if (!confirm('Wczytać preset „' + E.PRESETS[p].label + '”? Nazwa, adres, godziny i usługi zostaną zastąpione przykładowymi.')) return;
+  const keep = S.automation; S = E.defaultSettings(p); S.automation = keep || S.automation; E.saveSettings(S); renderSettings(); toast('Wczytano preset ' + E.PRESETS[p].label);
+};
+
+/* ---------- automatyzacja ---------- */
+['aConfirm', 'aCallback'].forEach(id => $(id).onchange = () => {
+  S.automation = { autoConfirm: $('aConfirm').checked, fallbackToCallback: $('aCallback').checked }; E.saveSettings(S); toast('Reguła zapisana');
+});
+function summary() {
+  const day = $('sumDate').value || E.iso(new Date());
+  const d = E.fromIso(day);
+  const rs = store.list();
+  const visits = rs.filter(r => r.type === 'wizyta' && r.date === day && r.status !== 'odwołane').sort((a, b) => a.time.localeCompare(b.time));
+  const cancelled = rs.filter(r => r.type === 'wizyta' && r.date === day && r.status === 'odwołane');
+  const calls = rs.filter(r => r.type === 'oddzwonienie' && r.status !== 'zrobione');
+  const conv = store.convos().filter(c => E.iso(new Date(c.start)) === day);
+  const L = [];
+  L.push(`Podsumowanie dnia – ${S.name}`);
+  L.push(`${DAYS[d.getDay()]}, ${d.toLocaleDateString('pl-PL')}`);
+  L.push('');
+  L.push(`Wizyty (${visits.length}):`);
+  visits.forEach(v => L.push(`• ${v.time} ${v.service} – ${v.name}, tel. ${ph(v.phone)} [${v.status}]`));
+  if (!visits.length) L.push('• brak');
+  if (cancelled.length) L.push(`Odwołane: ${cancelled.length}`);
+  L.push('');
+  L.push(`Do oddzwonienia (${calls.length}):`);
+  calls.forEach(c => L.push(`• ${c.name}, tel. ${ph(c.phone)} – ${c.note || 'kontakt'}`));
+  if (!calls.length) L.push('• brak');
+  L.push('');
+  const oc = {}; conv.forEach(c => oc[c.outcome] = (oc[c.outcome] || 0) + 1);
+  L.push(`Rozmowy z agentem tego dnia: ${conv.length}` + (conv.length ? ' (' + Object.entries(oc).map(([k, v]) => k + ': ' + v).join(', ') + ')' : ''));
+  L.push('— JOKERAl');
+  $('sumText').value = L.join('\n');
+}
+$('sumDate').value = E.iso(new Date());
+$('genSum').onclick = summary; $('sumDate').onchange = summary;
+$('copySum').onclick = async () => {
+  if (!$('sumText').value) summary();
+  try { await navigator.clipboard.writeText($('sumText').value); toast('Skopiowano'); }
+  catch (e) { $('sumText').select(); document.execCommand('copy'); toast('Skopiowano'); }
+};
+function download(name, text, type) {
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+$('expCsv').onclick = () => {
+  const q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+  const rows = [['typ', 'data', 'godzina', 'usluga', 'imie', 'telefon', 'status', 'notatka', 'utworzono']].concat(store.list().map(r => [r.type, r.date, r.time, r.service, r.name, r.phone, r.status, r.note, r.created]));
+  download('jokeral-zgloszenia-' + E.iso(new Date()) + '.csv', '\ufeff' + rows.map(r => r.map(q).join(';')).join('\r\n'), 'text/csv;charset=utf-8');
+};
+$('expJson').onclick = () => download('jokeral-ustawienia.json', JSON.stringify(S, null, 2), 'application/json');
+$('impJson').onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try {
+    const s = JSON.parse(await f.text());
+    if (!s || !Array.isArray(s.services) || !Array.isArray(s.hours) || s.hours.length !== 7) throw new Error('zły format');
+    S = Object.assign(E.defaultSettings(s.preset), s); E.saveSettings(S); renderSettings(); toast('Wczytano ustawienia');
+  } catch (err) { alert('Nie udało się wczytać pliku: ' + err.message); }
+  e.target.value = '';
+};
+$('wipe').onclick = () => { if (confirm('Usunąć wszystkie rozmowy i zgłoszenia z tej przeglądarki?')) { localStorage.removeItem(K.records); localStorage.removeItem(K.convos); renderAll(); toast('Wyczyszczono'); } };
+$('wipeAll').onclick = () => $('forgot').click();
+
+function renderAll() { S = E.loadSettings(); renderConvos(); renderRecords(); renderSettings(); summary(); }
+addEventListener('storage', () => { if (!$('app').classList.contains('hidden')) { renderConvos(); renderRecords(); } });
+
+/* start */
+gateUI();
+if (hasPin() && sessionStorage.getItem('jokeral.unlocked') === '1') open_();
+const h = location.hash.slice(1); const tb = document.querySelector(`.tab[data-t="${h}"]`); if (tb) tb.click();
+})();
+</script>
+</body>
+</html>
