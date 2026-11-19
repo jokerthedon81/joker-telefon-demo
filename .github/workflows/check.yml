@@ -1,0 +1,24 @@
+name: HTML Validation
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  html:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install HTMLHint
+        run: npm install --global htmlhint
+      - name: Validate HTML files
+        shell: bash
+        run: |
+          mapfile -t files < <(find . -type f -name '*.html' -not -path './.git/*' -not -path './node_modules/*')
+          if [ "${#files[@]}" -eq 0 ]; then echo "No HTML files found."; exit 0; fi
+          htmlhint "${files[@]}"
